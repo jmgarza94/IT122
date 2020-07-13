@@ -1,0 +1,24 @@
+{
+  "name": "it122",
+  "version": "1.0.0",
+  "description": "my it122 class work",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jmgarza94/IT122.git"
+  },
+  "keywords": [
+    "it122",
+    "joey",
+    "garza"
+  ],
+  "author": "Joey Garza",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jmgarza94/IT122/issues"
+  },
+  "homepage": "https://github.com/jmgarza94/IT122#readme"
+}
