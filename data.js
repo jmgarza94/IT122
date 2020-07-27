@@ -1,40 +1,46 @@
 var ferrari = {
-    origin: 'Italy',
+    ID: 0,
+    make: 'Ferrari',
     model: '488',
     year: 2010,
     color: 'yellow'
 };
 
 var lamborghini = {
-    origin: 'Italy',
+    ID: 1,
+    make: 'Lamborghini',
     model: 'Huracan',
     year: 2018,
     color: 'white'
 };
 
 var nissan = {
-    origin: 'Japan',
+    ID: 2,
+    make: 'Nissan',
     model: 'GTR',
     year: 2012,
     color: 'black'
 };
 
 var chevrolet = {
-    origin: 'United States',
+    ID: 3,
+    make: 'Chevrolet',
     model: 'Corvette',
     year: 2016,
     color: 'red'
 };
 
 var pagani = {
-    origin: 'Italy',
+    ID: 4,
+    make: 'Pagani',
     model: 'Huayra',
     year: 2019,
     color: 'silver'
 };
 
 var mclaren = {
-    origin: 'Britain',
+    ID: 5,
+    make: 'McLaren',
     model: 'P1',
     year: 2012,
     color: 'purple'

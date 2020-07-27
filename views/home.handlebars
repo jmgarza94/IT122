@@ -1,0 +1,23 @@
+<!doctype html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Home Handlebars</title>
+</head>
+
+<body>
+    <h2>
+        Vehicles
+    </h2>
+    <ul> 
+        {{#each vehicles}}  
+        {{!-- //http://localhost:3000/detail?item=0 --}}
+        <a href="/detail?item={{ID}}"><li>{{make}} {{model}}</li></a>
+        {{/each}}
+    </ul>
+
+</body>
+
+</html>
