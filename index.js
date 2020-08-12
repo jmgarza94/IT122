@@ -4,7 +4,7 @@ let exphbs = require("express-handlebars"); // should be at top of module
 const express = require("express");
 const bodyParser = require("body-parser");
 const http = require("http");
-const vehicles = require("./data.js");
+const Cars = require("./models/carsdb.js");
 const app = express();
 
 app.engine("handlebars", exphbs({ defaultLayout: false }));
@@ -14,16 +14,45 @@ app.set("port", process.env.PORT || 3000);
 app.use(express.static(__dirname + "/public")); // set location for static files
 app.use(bodyParser.urlencoded({ extended: true })); // parse form submissions
 
-// send static file as response
 app.get("/", (req, res) => {
-  res.render("home", { vehicles: vehicles.getAll() });
+  return Cars.find({})
+    .lean()
+    .then((vehicles) => {
+      res.render("home", { vehicles });
+    })
+    .catch((err) => next(err));
 });
 
 app.get("/detail", (req, res) => {
   //http://localhost:3000/detail?item=0
-  let vehicle=vehicles.getAll()[req.query.item];
-  console.log(vehicle);
-  res.render("detail", {vehicle: vehicle, item: req.query.item});
+  Cars.findOne({ ID: req.query.item })
+    .lean()
+    .then((vehicle) => {
+      res.render("detail", { vehicle: vehicle, item: req.query.item });
+    })
+    .catch((err) => next(err));
+});
+
+app.get("/delete", (req, res) => {
+  //http://localhost:3000/delete?item=0
+  // Cars.deleteOne({ ID: req.query.item })
+  //   .lean()
+  //   .then((vehicle) => {
+  //     res.render("delete", { vehicle: vehicle, item: req.query.item });
+  //   })
+  //   .catch((err) => {
+  //     console.log(err);
+  //     next(err)
+  //   });
+    Cars.findOneAndDelete({ ID: req.query.item }, function(err, result) {
+      if (err) {
+        res.send("ERROR" + err);
+      } else {
+        console.log("success")
+        res.render("delete", {item: req.query.item });
+      }
+    });
+
 });
 
 // send plain text response
