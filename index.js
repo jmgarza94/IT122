@@ -13,6 +13,9 @@ app.set("view engine", "handlebars");
 app.set("port", process.env.PORT || 3000);
 app.use(express.static(__dirname + "/public")); // set location for static files
 app.use(bodyParser.urlencoded({ extended: true })); // parse form submissions
+app.use(bodyParser.json());
+
+app.use("/api", require("cors")()); // set Access-Control-Allow-Origin header for api route
 
 app.get("/", (req, res) => {
   return Cars.find({})
@@ -33,27 +36,63 @@ app.get("/detail", (req, res) => {
     .catch((err) => next(err));
 });
 
+app.get("/api/cars", (req, res) => {
+  //http://localhost:3000/api/cars
+  Cars.find({})
+    .lean()
+    .then((vehicles) => {
+      res.json(vehicles);
+    })
+    .catch((err) => res.status(500).send("Error occurred: database error."));
+});
+
+app.get("/api/cars/:vin", (req, res) => {
+  //http://localhost:3000/api/cars/2
+  const vin = req.params["vin"];
+  Cars.findOne({ ID: vin})
+    .lean()
+    .then((vehicle) => {
+      res.json(vehicle);
+    })
+    .catch((err) => res.status(500).send("Error occurred: database error."));
+});
+
+app.delete("/api/cars/:vin", (req, res) => {
+  //http://localhost:3000/api/cars/2
+  const vin = req.params["vin"];
+  Cars.findOneAndDelete({ ID: vin})
+    .lean()
+    .then((vehicle) => {
+      // res.json(vehicle);
+      res.status(200).send();
+    })
+    .catch((err) => res.status(500).send("Error occurred: database error."));
+});
+
+app.post("/api/cars", (req, res) => {
+  const vehicle = req.body;
+  var v1 = new Cars(vehicle);
+  console.log(vehicle);
+  v1.save(function (err, vehicle) {
+    if (err) return console.error(err);
+    console.log(vehicle.ID + " saved to vehicle database.");
+  });
+  res.status(200).send(req.body);
+});
+
+
 app.get("/delete", (req, res) => {
   //http://localhost:3000/delete?item=0
-  // Cars.deleteOne({ ID: req.query.item })
-  //   .lean()
-  //   .then((vehicle) => {
-  //     res.render("delete", { vehicle: vehicle, item: req.query.item });
-  //   })
-  //   .catch((err) => {
-  //     console.log(err);
-  //     next(err)
-  //   });
-    Cars.findOneAndDelete({ ID: req.query.item }, function(err, result) {
-      if (err) {
-        res.send("ERROR" + err);
-      } else {
-        console.log("success")
-        res.render("delete", {item: req.query.item });
-      }
-    });
-
+  Cars.findOneAndDelete({ ID: req.query.item }, function (err, result) {
+    if (err) {
+      res.send("ERROR" + err);
+    } else {
+      console.log("success");
+      res.render("delete", { item: req.query.item });
+    }
+  });
 });
+
 
 // send plain text response
 app.get("/about", (req, res) => {

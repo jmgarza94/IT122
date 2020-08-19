@@ -12,7 +12,7 @@ mongoose.connection.on("open", () => {
 
 // define car model in JSON key/value pairs
 // values indicate the data type of each key
-const carSchema = mongoose.Schema({
+const CarSchema = mongoose.Schema({
   ID: { type: Number, required: true },
   make: String,
   model: String,
@@ -20,4 +20,4 @@ const carSchema = mongoose.Schema({
   color: String,
 });
 
-module.exports = mongoose.model("Car", carSchema);
+module.exports = mongoose.model("Car", CarSchema);
