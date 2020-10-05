@@ -1,0 +1,107 @@
+<html>
+
+<head>
+  <title>React App Demo</title>
+  <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+  <!-- Don't use this in production: -->
+  <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+</head>
+
+<body>
+
+  <div id="root"></div>
+  <script type="text/babel">
+    // define your sub components here
+
+    class Details extends React.Component {
+      render() {
+        return (
+          <div>
+            <h3>Vehicle Details</h3>
+            <table><tbody>
+              <tr><th>ID:</th><td><input type="text" id="ID" name="ID" value={this.props.vehicle.ID}></input></td></tr>
+              <tr><th>Year:</th><td><input type="text" id="ID" name="ID" value={this.props.vehicle.year}></input></td></tr>
+              <tr><th>Make:</th><td><input type="text" id="ID" name="ID" value={this.props.vehicle.make}></input></td></tr>
+              <tr><th>Model:</th><td><input type="text" id="ID" name="ID" value={this.props.vehicle.model}></input></td></tr>
+            </tbody></table>
+          </div>
+        );
+      }
+    } //-Details
+
+    class Inventory extends React.Component {
+      constructor(props) {
+        super(props);
+        this.state = {
+          vehicles: [],
+      currentVehicle: {}
+    };
+    this.clearItem = this.clearItem.bind(this);
+    this.deleteItem = this.deleteItem.bind(this);
+    this.saveItem = this.saveItem.bind(this);
+            }
+
+    componentDidMount() {
+      this.fetchVehicles();
+
+    }
+
+    clearItem() {
+      this.setState({ currentVehicle: {
+        ID: "",
+        year: "",
+        make: "",
+        model: ""
+      } });
+    }
+
+    deleteItem() {
+      console.log(this.state.currentVehicle);
+      fetch( "http://localhost:3000/api/cars/"+this.state.currentVehicle.ID, {method:"DELETE"} );
+      this.fetchVehicles();
+      this.setState({ currentVehicle: {} });
+    }
+
+    saveItem(event) {
+      console.log("save item");
+    }
+
+    fetchVehicles() {
+              fetch( "http://localhost:3000/api/cars", {method:"GET"} )
+                .then( (response) => response.json() )
+                .then( (json) => {
+                  this.setState({
+                    vehicles: json
+                  }) ;
+                }) ;
+            }
+
+
+    render() {
+      return (
+        <div>
+          {{!-- for each vehicle in vehicles... --}}
+          <p>Select a vehicle for more details</p>
+
+          <ul>{this.state.vehicles.map((vehicle) =>
+            <li onClick={() => this.setState({ currentVehicle: vehicle })} key={vehicle.ID}>{vehicle.year} {vehicle.make} {vehicle.model}</li>
+          )}</ul>
+
+          <hr />
+
+          <Details vehicle={this.state.currentVehicle} />
+          <button onClick={this.clearItem}>CLEAR</button>
+          <button onClick={() => this.deleteItem()}>DELETE</button>
+          <button onClick={this.saveItem}>SAVE</button>
+
+        </div>
+      );
+    } //-render
+        } //-Inventory
+
+    ReactDOM.render(<Inventory />, document.getElementById('root'));
+  </script>
+</body>
+
+</html>
